@@ -10,6 +10,7 @@ def setup(
     conan_recipes: typing.List[str] = None,
     conan_requirements: typing.List[str] = None,
     conan_output_folder=".conan",
+    conan_config_folder: str = None,
     conan_profile_settings: typing.Dict = None,
     wrapped_setup: typing.Callable = skbuild.setup,
     cmake_args: typing.List[str] = None,
@@ -24,24 +25,35 @@ def setup(
                         the conan dependencies without a conanfile. This option is
                         exclusive. If you define `conan_requirements`, this option is
                         ignored.
+
     :param conan_recipes: List of paths to further conan recipes. The conan package index
         is far from perfect, so often you need to build your own recipes. You don't
         always want to upload those, so this argument gives you the option to integrate
         local recipes. Just the path to the folder containing the `conanfile.py`.
+
     :param conan_requirements: Instead of providing a conanfile, you can simply state
         the dependencies here. E.g. `["fmt/[>=10.0.0]"]` to add fmt in version >=10.0.0.
+
     :param conan_profile_settings: Overwrite conan profile settings. Sometimes necessary
         because of ABI-problems, etc.
+
     :param wrapped_setup: The setup-method that is going to be wrapped. This would allow
         you to extend already extended setup functions. By default, it is the `setup`
         of `skbuild`, which extends the `setup` of `setuptools`.
+
     :param conan_output_folder: The folder where conan will write the generated files.
         No real reason to change it unless the default creates conflicts with some other
         tool.
+
+    :param conan_config_folder: The folder containing conan configuration files like profiles,
+        remotes and settings to be installed with `conan config install` command.
+
     :param cmake_args: This is actually an argument of `skbuild` but we will extend it.
         It hands cmake custom arguments. We use it to tell cmake about the conan modules.
+
     :param kwargs: The arguments for the underlying `setup`. Please check the
         documentation of `skbuild` and `setuptools` for this.
+
     :return: The returned values of the wrapped setup.
     """
 
@@ -57,6 +69,10 @@ def setup(
         local_recipes=conan_recipes,
         settings=conan_profile_settings,
     )
+
+    if conan_config_folder:
+        conan_helper.install_config(conan_config_folder)
+
     conan_helper.install(path=conanfile, requirements=conan_requirements)
     cmake_args = cmake_args if cmake_args else []
     cmake_args += conan_helper.cmake_args()
