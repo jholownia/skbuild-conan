@@ -102,7 +102,7 @@ class ConanHelper:
         Has to be appended to `cmake_args` in `setup(...)`.
         """
         toolchain_path = os.path.abspath(
-            f"{self.generator_folder}/conan_toolchain.cmake"
+            f"{self.generator_folder}/build/conan_toolchain.cmake"
         )
         if not os.path.exists(toolchain_path):
             raise RuntimeError(
