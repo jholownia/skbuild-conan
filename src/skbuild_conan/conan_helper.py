@@ -14,9 +14,11 @@ class ConanHelper:
     Dominik Krupke, TU Braunschweig, 2023
     """
 
-    def __init__(self, output_folder=".conan", local_recipes=None, settings=None):
+    def __init__(self, output_folder=".conan", build_profile="default", host_profile="default", local_recipes=None, settings=None):
         self.generator_folder = os.path.abspath(output_folder)
         self.local_recipes = local_recipes if local_recipes else []
+        self.build_profile = build_profile
+        self.host_profile = host_profile
         self.settings = settings if settings else {}
         self._check_conan_version()
 
@@ -77,6 +79,7 @@ class ConanHelper:
         self.install_from_paths(self.local_recipes)
 
         cmd = f"-m conans.conan install"
+        cmd += f" -pr:h {self.host_profile} -pr:b {self.build_profile}"
         if requirements:
             # requirements passed from Python directly
             for req in requirements:

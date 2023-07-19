@@ -11,6 +11,8 @@ def setup(
     conan_requirements: typing.List[str] = None,
     conan_output_folder=".conan",
     conan_config_folder: str = None,
+    conan_build_profile="default",
+    conan_host_profile="default",
     conan_profile_settings: typing.Dict = None,
     wrapped_setup: typing.Callable = skbuild.setup,
     cmake_args: typing.List[str] = None,
@@ -45,6 +47,10 @@ def setup(
         No real reason to change it unless the default creates conflicts with some other
         tool.
 
+    :param conan_build_profile: Conan build profile to use.
+
+    :param conan_host_profile: Conan host profile to use.
+
     :param conan_config_folder: The folder containing conan configuration files like profiles,
         remotes and settings to be installed with `conan config install` command.
 
@@ -67,6 +73,8 @@ def setup(
     conan_helper = ConanHelper(
         output_folder=conan_output_folder,
         local_recipes=conan_recipes,
+        build_profile=conan_build_profile,
+        host_profile=conan_host_profile,
         settings=conan_profile_settings,
     )
 
