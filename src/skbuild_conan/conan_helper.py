@@ -30,6 +30,10 @@ class ConanHelper:
         if version[0] != "2":
             raise RuntimeError(f"Conan 2 required. Current version {version}.")
 
+    def install_config(self, config_folder):        
+        cmd = f"-m conans.conan config install {config_folder}"
+        subprocess.run([sys.executable, *cmd.split(" ")], check=True)
+
     def _conan_to_json(self, args):
         """
         Runs conan with the args and parses the output as json.
@@ -68,8 +72,7 @@ class ConanHelper:
     def install(self, path: str = ".", requirements: typing.List[str] = None):
         """
         Running conan to get C++ dependencies
-        """
-        print("Running conan install!!1")
+        """        
         self.create_profile()
         self.install_from_paths(self.local_recipes)
 
