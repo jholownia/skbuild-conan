@@ -71,7 +71,7 @@ class ConanHelper:
         cmd = f"-m conans.conan profile detect"
         subprocess.run([sys.executable, *cmd.split(" ")], check=False, stderr=None)
 
-    def install(self, path: str = ".", requirements: typing.List[str] = None):
+    def install(self, path: str = ".", requirements: typing.List[str] = None, extra_args: str = None):
         """
         Running conan to get C++ dependencies
         """        
