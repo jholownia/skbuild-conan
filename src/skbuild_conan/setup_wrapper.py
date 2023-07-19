@@ -14,6 +14,7 @@ def setup(
     conan_build_profile="default",
     conan_host_profile="default",
     conan_profile_settings: typing.Dict = None,
+    conan_extra_args: str = None,
     wrapped_setup: typing.Callable = skbuild.setup,
     cmake_args: typing.List[str] = None,
     **kwargs
@@ -57,6 +58,8 @@ def setup(
     :param cmake_args: This is actually an argument of `skbuild` but we will extend it.
         It hands cmake custom arguments. We use it to tell cmake about the conan modules.
 
+    :param conan_extra_args: Additional arguments to pass to conan install.
+
     :param kwargs: The arguments for the underlying `setup`. Please check the
         documentation of `skbuild` and `setuptools` for this.
 
@@ -81,7 +84,7 @@ def setup(
     if conan_config_folder:
         conan_helper.install_config(conan_config_folder)
 
-    conan_helper.install(path=conanfile, requirements=conan_requirements)
+    conan_helper.install(path=conanfile, requirements=conan_requirements, extra_args=conan_extra_args)
     cmake_args = cmake_args if cmake_args else []
     cmake_args += conan_helper.cmake_args()
     return wrapped_setup(cmake_args=cmake_args, **kwargs)

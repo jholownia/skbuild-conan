@@ -95,6 +95,9 @@ class ConanHelper:
         cmd += f" --output-folder={self.generator_folder}"
         # Making sure  the right generators are used.
         #cmd += f" -g CMakeDeps -g CMakeToolchain"
+        if extra_args:
+            cmd += f" {extra_args}"
+
         subprocess.run([sys.executable, *cmd.split(" ")], check=True)
 
     def cmake_args(self):
@@ -112,5 +115,5 @@ class ConanHelper:
             )
         return [
             f"-DCMAKE_TOOLCHAIN_FILE={toolchain_path}",
-            f"-DCMAKE_PREFIX_PATH={self.generator_folder}",
+            f"-DCMAKE_PREFIX_PATH={self.generator_folder}/build",
         ]
