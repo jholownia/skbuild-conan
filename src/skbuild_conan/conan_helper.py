@@ -3,7 +3,7 @@ import subprocess
 import sys
 import os
 import typing
-
+import skbuild.constants as skc
 
 class ConanHelper:
     """
@@ -99,9 +99,9 @@ class ConanHelper:
             cmd += f" {extra_args}"
 
         subprocess.run([sys.executable, *cmd.split(" ")], check=True)
-        bin_path = os.path.join(self.generator_folder, "build", "bin")
-        print(f"Adding {bin_path} to PATH")
-        os.environ['PATH'] += ';'+bin_path
+        
+        print(f"SKC: {skc.CMAKE_BUILD_DIR}")
+        
 
     def cmake_args(self):
         """
