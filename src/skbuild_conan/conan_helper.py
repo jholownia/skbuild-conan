@@ -99,7 +99,7 @@ class ConanHelper:
             cmd += f" {extra_args}"
 
         subprocess.run([sys.executable, *cmd.split(" ")], check=True)
-        bin_path = os.path.join(self.generator_folder, "build", bin)
+        bin_path = os.path.join(self.generator_folder, "build", "bin")
         print(f"Adding {bin_path} to PATH")
         os.environ['PATH'] += ';'+bin_path
 
