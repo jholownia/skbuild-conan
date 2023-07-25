@@ -100,7 +100,7 @@ class ConanHelper:
 
         subprocess.run([sys.executable, *cmd.split(" ")], check=True)
         
-        print(f"SKC: {skc.CMAKE_BUILD_DIR}")
+        print(f"SKC: {skc.CMAKE_BUILD_DIR()}")
         
 
     def cmake_args(self):
