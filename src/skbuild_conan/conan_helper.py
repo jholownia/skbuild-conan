@@ -4,6 +4,7 @@ import sys
 import os
 import typing
 import skbuild.constants as skc
+from conan.tools.files import copy
 
 class ConanHelper:
     """
@@ -14,12 +15,13 @@ class ConanHelper:
     Dominik Krupke, TU Braunschweig, 2023
     """
 
-    def __init__(self, output_folder=".conan", build_profile="default", host_profile="default", local_recipes=None, settings=None):
+    def __init__(self, output_folder=".conan", build_profile="default", host_profile="default", local_recipes=None, settings=None, imports=None):
         self.generator_folder = os.path.abspath(output_folder)
         self.local_recipes = local_recipes if local_recipes else []
         self.build_profile = build_profile
         self.host_profile = host_profile
         self.settings = settings if settings else {}
+        self.imports = imports if imports else []
         self._check_conan_version()
 
     def conan_version(self):
@@ -43,6 +45,14 @@ class ConanHelper:
         args = [sys.executable, "-m", "conans.conan"] + args
         return json.loads(subprocess.check_output(args).decode())
 
+    def _copy_imports(self):
+        conan_folder = self.generator_folder
+        skbuild_folder = skc.CMAKE_BUILD_DIR()
+        copied = []
+        for i in imports:
+            copied += copy(None, i.pattern, os.path.join(conan_folder, i.src), os.path.join(skbuild.folder, i.dst))
+        return copied
+        
     def install_from_paths(self, paths):
         """
         Installs all the conanfiles to local cache. Will automatically skip if the package
@@ -70,6 +80,8 @@ class ConanHelper:
             return  # Profile already exists
         cmd = f"-m conans.conan profile detect"
         subprocess.run([sys.executable, *cmd.split(" ")], check=False, stderr=None)
+
+    
 
     def install(self, path: str = ".", requirements: typing.List[str] = None, extra_args: str = None):
         """
@@ -99,8 +111,8 @@ class ConanHelper:
             cmd += f" {extra_args}"
 
         subprocess.run([sys.executable, *cmd.split(" ")], check=True)
-        
-        print(f"SKC: {skc.CMAKE_BUILD_DIR()}")
+        copied = self._copy_imports()
+        print("Copied files: ", copied)
         
 
     def cmake_args(self):

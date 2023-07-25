@@ -17,6 +17,7 @@ def setup(
     conan_extra_args: str = None,
     wrapped_setup: typing.Callable = skbuild.setup,
     cmake_args: typing.List[str] = None,
+    skbuild_imports: typing.List[typing.Dict] = None,
     **kwargs
 ):
     """
@@ -60,25 +61,22 @@ def setup(
 
     :param conan_extra_args: Additional arguments to pass to conan install.
 
+    :param imports: A list of files to be copied from the conan build folder to SKBUILD
+        build folder, taking a form of a list of dictionaries consisting of { src, dest, pattern }
+        fields.
+
     :param kwargs: The arguments for the underlying `setup`. Please check the
         documentation of `skbuild` and `setuptools` for this.
 
     :return: The returned values of the wrapped setup.
     """
-
-    # Workaround for mismatching ABI with GCC on Linux
-    #conan_profile_settings = conan_profile_settings if conan_profile_settings else {}
-    #if sys.platform == "linux" and "compiler.libcxx" not in conan_profile_settings:
-    #    print('Using workaround and setting "compiler.libcxx=libstdc++11"')
-    #    conan_profile_settings = conan_profile_settings.copy()
-    #    conan_profile_settings["compiler.libcxx"]= "libstdc++11"
-
     conan_helper = ConanHelper(
         output_folder=conan_output_folder,
         local_recipes=conan_recipes,
         build_profile=conan_build_profile,
         host_profile=conan_host_profile,
         settings=conan_profile_settings,
+        imports=skbuild_imports
     )
 
     if conan_config_folder:
