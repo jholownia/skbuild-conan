@@ -49,7 +49,7 @@ class ConanHelper:
         conan_folder = self.generator_folder
         skbuild_folder = skc.CMAKE_BUILD_DIR()
         copied = []
-        for i in imports:
+        for i in self.imports:
             copied += copy(None, i.pattern, os.path.join(conan_folder, i.src), os.path.join(skbuild.folder, i.dst))
         return copied
         
