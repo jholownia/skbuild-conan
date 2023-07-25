@@ -52,7 +52,7 @@ class ConanHelper:
         print(f"Copying files from {conan_folder} to {skbuild_folder}")
         for i in self.imports:
             print(i)
-            copied += copy(None, pattern=i['pattern'], src=os.path.join(conan_folder, i['src']), dst=os.path.join(skbuild.folder, i['dst']))
+            copied += copy(None, pattern=i['pattern'], src=os.path.join(conan_folder, i['src']), dst=os.path.join(skbuild_folder, i['dst']))
         return copied
         
     def install_from_paths(self, paths):
