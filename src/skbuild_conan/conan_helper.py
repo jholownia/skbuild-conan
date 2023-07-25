@@ -46,10 +46,12 @@ class ConanHelper:
         return json.loads(subprocess.check_output(args).decode())
 
     def _copy_imports(self):
-        conan_folder = self.generator_folder
-        skbuild_folder = skc.CMAKE_BUILD_DIR()
+        conan_folder = os.path.abspath(self.generator_folder)
+        skbuild_folder = os.path.abspath(skc.CMAKE_BUILD_DIR())
         copied = []
+        print(f"Copying files from {conan_folder} to {skbuild_folder}")
         for i in self.imports:
+            print(i)
             copied += copy(None, i.pattern, os.path.join(conan_folder, i.src), os.path.join(skbuild.folder, i.dst))
         return copied
         
